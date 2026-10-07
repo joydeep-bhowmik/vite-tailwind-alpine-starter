@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{=$title} | My Site</title>
+
+    <link rel="stylesheet" href="/src/css/style.css" />
+  </head>
+
+  <body>
+    <load src="src/components/header.html" active="{=$title}" />
+
+    <main class="min-h-screen max-w-7xl mx-auto p-10">
+      <!-- @content -->
+    </main>
+
+    <load src="src/components/footer.html" year="2026" />
+
+    <script type="module" src="/src/js/main.js"></script>
+  </body>
+</html>

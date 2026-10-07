@@ -1,0 +1,36 @@
+<layout src="src/layouts/main.html" title="Home">
+  <!-- Page Title -->
+  <h1 class="text-2xl">Home</h1>
+
+  <!-- Page Description -->
+  <h2 class="mt-6 text-xl">Description</h2>
+  <p>This is the home page.</p>
+
+  <!-- Image -->
+  <h2 class="mt-6 text-xl">Image</h2>
+  <img
+    src="/src/assets/images/sample.png"
+    alt="Colorful gradient banner"
+    width="600"
+    height="300"
+    class="mt-6 h-auto w-full max-w-[600px] rounded-xl"
+  />
+
+  <!-- Video -->
+  <h2 class="mt-6 text-xl">Video</h2>
+  <video
+    controls
+    class="mt-6 h-auto w-full max-w-[600px]"
+    src="/src/assets/videos/sample.mp4"
+  ></video>
+
+  <!-- Counter -->
+  <h2 class="mt-6 text-xl">Counter</h2>
+  <div x-data="{ count: 0 }" class="mt-6 flex items-center gap-4">
+    <button @click="count--" class="rounded border px-3 py-1">-</button>
+
+    <span x-text="count" class="w-8 text-center text-xl">0</span>
+
+    <button @click="count++" class="rounded border px-3 py-1">+</button>
+  </div>
+</layout>
