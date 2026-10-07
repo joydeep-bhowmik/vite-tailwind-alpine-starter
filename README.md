@@ -1,4 +1,4 @@
-# Static Site Generator
+# Vite tailwind alpine starter
 
 Build a website from plain HTML files. Write the header and footer once, then reuse them on every page.
 
@@ -21,11 +21,11 @@ npm run preview   # check the final site
 
 There are three building blocks:
 
-| Block         | What it is                                 | Where it lives      |
-| ------------- | ------------------------------------------ | ------------------- |
-| **Page**      | One page of your site                      | project root        |
-| **Layout**    | The frame around a page (head, header, footer) | `src/layouts/`  |
-| **Component** | A small reusable piece (a header, a card...) | `src/components/` |
+| Block         | What it is                                     | Where it lives    |
+| ------------- | ---------------------------------------------- | ----------------- |
+| **Page**      | One page of your site                          | project root      |
+| **Layout**    | The frame around a page (head, header, footer) | `src/layouts/`    |
+| **Component** | A small reusable piece (a header, a card...)   | `src/components/` |
 
 A page sits inside a layout, and the layout loads components:
 
@@ -188,7 +188,7 @@ A page can't talk to the header directly, so the layout passes the value along:
 <load src="src/components/header.html" active="{=$title}" />
 
 <!-- src/components/header.html -->
-<span>You are on: {=$active}</span>   →   You are on: About
+<span>You are on: {=$active}</span> → You are on: About
 ```
 
 ### Good to know
@@ -214,7 +214,9 @@ The header uses the `active` argument to underline the link for the current page
 When you add a page, add a link whose class uses that page's `title`:
 
 ```html
-<a href="/contact.html" class="group-data-[active=Contact]:underline">contact</a>
+<a href="/contact.html" class="group-data-[active=Contact]:underline"
+  >contact</a
+>
 ```
 
 The match is case-sensitive. Write spaces as `_`, so `title="Contact Us"` becomes `active=Contact_Us`.
@@ -252,22 +254,22 @@ Learn more at [alpinejs.dev](https://alpinejs.dev).
 
 ## Cheat sheet
 
-| I want to...            | Write                                                   |
-| ----------------------- | ------------------------------------------------------- |
-| Make a page             | `about.html` in the root, wrapped in `<layout>`         |
-| Use a layout            | `<layout src="src/layouts/main.html" title="About">`    |
-| Mark the content spot   | `<!-- @content -->` inside the layout                   |
-| Insert a component      | `<load src="src/components/footer.html" />`             |
-| Send an argument        | `<load src="..." year="2026" />`                        |
-| Read an argument        | `{=$year}`                                              |
-| Pass a page value on    | `<load src="..." active="{=$title}" />` in the layout   |
+| I want to...          | Write                                                 |
+| --------------------- | ----------------------------------------------------- |
+| Make a page           | `about.html` in the root, wrapped in `<layout>`       |
+| Use a layout          | `<layout src="src/layouts/main.html" title="About">`  |
+| Mark the content spot | `<!-- @content -->` inside the layout                 |
+| Insert a component    | `<load src="src/components/footer.html" />`           |
+| Send an argument      | `<load src="..." year="2026" />`                      |
+| Read an argument      | `{=$year}`                                            |
+| Pass a page value on  | `<load src="..." active="{=$title}" />` in the layout |
 
 ## Common mistakes
 
-| Problem                           | Fix                                              |
-| --------------------------------- | ------------------------------------------------ |
-| Component doesn't show            | Close `<load>` with `/>`, not `</load>`          |
-| "File not found" error            | Path starts at the root: `src/...`, not `./src/...` |
-| `{=$title}` appears on the page   | Add `title="..."` to the `<layout>` tag          |
-| Changed `vite.config.js`, nothing happens | Restart `npm run dev`                    |
-| Two `<layout>` tags on one page   | Use only one per page                            |
+| Problem                                   | Fix                                                 |
+| ----------------------------------------- | --------------------------------------------------- |
+| Component doesn't show                    | Close `<load>` with `/>`, not `</load>`             |
+| "File not found" error                    | Path starts at the root: `src/...`, not `./src/...` |
+| `{=$title}` appears on the page           | Add `title="..."` to the `<layout>` tag             |
+| Changed `vite.config.js`, nothing happens | Restart `npm run dev`                               |
+| Two `<layout>` tags on one page           | Use only one per page                               |
