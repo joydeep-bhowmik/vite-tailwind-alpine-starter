@@ -23,44 +23,62 @@ There are three building blocks:
 
 | Block         | What it is                                     | Where it lives    |
 | ------------- | ---------------------------------------------- | ----------------- |
-| **Page**      | One page of your site                          | project root      |
+| **Page**      | One page of your site                          | `src/pages/`      |
 | **Layout**    | The frame around a page (head, header, footer) | `src/layouts/`    |
 | **Component** | A small reusable piece (a header, a card...)   | `src/components/` |
 
 A page sits inside a layout, and the layout loads components:
 
 ```
-about.html  ──►  src/layouts/main.html  ──►  src/components/header.html
- (content)        (frame)                    src/components/footer.html
+src/pages/about.html  ──►  src/layouts/main.html  ──►  src/components/header.html
+ (content)                 (frame)                    src/components/footer.html
 ```
 
 ```
-index.html
-about.html
 src/
-  layouts/main.html
-  components/header.html
-  components/footer.html
-  assets/images/     ← images
+  pages/             ← your pages
+    index.html       ← home page (/)
+    about.html       ← /about.html
+    contact.html     ← /contact.html
+  layouts/
+    main.html        ← the frame around every page
+  components/
+    header.html
+    footer.html
+  assets/
+    images/          ← images
+    videos/          ← videos
   css/style.css      ← Tailwind
   js/main.js         ← JavaScript (Alpine.js)
+vite.config.js       ← build setup (you rarely need to touch it)
 ```
 
 ---
 
 ## 1. Pages
 
-A page is any `.html` file in the project root. Wrap its content in a `<layout>` tag:
+A page is any `.html` file in `src/pages/`. Wrap its content in a `<layout>` tag:
 
 ```html
-<!-- contact.html -->
+<!-- src/pages/contact.html -->
 <layout src="src/layouts/main.html" title="Contact">
   <h1>Contact</h1>
   <p>Say hi!</p>
 </layout>
 ```
 
-Save the file and open `http://localhost:5173/contact.html`. There is nothing to register, because every root `.html` file is built automatically.
+Save the file and open `http://localhost:5173/contact.html`. There is nothing to register, because every `.html` file in `src/pages/` is built automatically.
+
+The `src/pages/` part is not in the URL:
+
+| File                     | URL             |
+| ------------------------ | --------------- |
+| `src/pages/index.html`   | `/`             |
+| `src/pages/about.html`   | `/about.html`   |
+| `src/pages/contact.html` | `/contact.html` |
+
+> **Note:** pages live in `src/pages/`, but paths inside them still start from the project root.
+> Write `src="src/layouts/main.html"`, **not** `../layouts/main.html`.
 
 ---
 
@@ -167,7 +185,7 @@ Use the same component again with different arguments:
 ### Into a layout
 
 ```html
-<!-- about.html -->
+<!-- src/pages/about.html -->
 <layout src="src/layouts/main.html" title="About"> ... </layout>
 ```
 
@@ -181,7 +199,7 @@ Use the same component again with different arguments:
 A page can't talk to the header directly, so the layout passes the value along:
 
 ```html
-<!-- about.html -->
+<!-- src/pages/about.html -->
 <layout src="src/layouts/main.html" title="About"> ... </layout>
 
 <!-- src/layouts/main.html -->
@@ -223,16 +241,18 @@ The match is case-sensitive. Write spaces as `_`, so `title="Contact Us"` become
 
 ---
 
-## 6. Images
+## 6. Images and videos
 
-Put images in `src/assets/images/` and link them from the root with a leading `/`:
+Put files in `src/assets/` and link them with a path that starts with `/`:
 
 ```html
-<img src="/src/assets/images/hero.svg" alt="Banner" width="600" height="300" />
+<img src="/src/assets/images/sample.png" alt="Sample" width="600" height="300" />
+
+<video src="/src/assets/videos/sample.mp4" controls></video>
 ```
 
-When you build, Vite copies the image into `dist/` and fixes the link for you.
-Very small images (under 4 KB) are embedded straight into the HTML.
+When you build, Vite copies the file into `dist/assets/` and fixes the link for you.
+Very small files (under 4 KB) are embedded straight into the HTML.
 
 ---
 
@@ -256,7 +276,7 @@ Learn more at [alpinejs.dev](https://alpinejs.dev).
 
 | I want to...          | Write                                                 |
 | --------------------- | ----------------------------------------------------- |
-| Make a page           | `about.html` in the root, wrapped in `<layout>`       |
+| Make a page           | `src/pages/about.html`, wrapped in `<layout>`         |
 | Use a layout          | `<layout src="src/layouts/main.html" title="About">`  |
 | Mark the content spot | `<!-- @content -->` inside the layout                 |
 | Insert a component    | `<load src="src/components/footer.html" />`           |
@@ -273,3 +293,5 @@ Learn more at [alpinejs.dev](https://alpinejs.dev).
 | `{=$title}` appears on the page           | Add `title="..."` to the `<layout>` tag             |
 | Changed `vite.config.js`, nothing happens | Restart `npm run dev`                               |
 | Two `<layout>` tags on one page           | Use only one per page                               |
+| New page missing from `dist/`             | Put it in `src/pages/`, not the project root        |
+| Layout not found from a page              | Use `src/layouts/...`, not `../layouts/...`         |

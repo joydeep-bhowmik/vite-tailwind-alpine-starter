@@ -1,0 +1,85 @@
+<layout src="src/layouts/main.html" title="Contact">
+  <!-- Page Title -->
+  <h1 class="text-2xl">Contact</h1>
+
+  <div
+    x-data="{
+      name: '',
+      email: '',
+      phone: '',
+      message: '',
+
+      submitForm() {
+        const whatsappNumber = '0000000';
+
+        const text = `Hello,
+
+  Name: ${this.name}
+  Email: ${this.email}
+  Phone: ${this.phone}
+
+  Message:
+  ${this.message}`;
+
+        const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+
+        window.open(url, '_blank');
+      }
+    }"
+    class="mt-4 max-w-[600px]"
+  >
+    <form @submit.prevent="submitForm" class="space-y-4">
+      <!-- Name -->
+      <div>
+        <label for="name" class="block">Name</label>
+        <input
+          id="name"
+          type="text"
+          x-model="name"
+          required
+          class="w-full rounded border px-3 py-2"
+        />
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="email" class="block">Email</label>
+        <input
+          id="email"
+          type="email"
+          x-model="email"
+          required
+          class="w-full rounded border px-3 py-2"
+        />
+      </div>
+
+      <!-- Phone -->
+      <div>
+        <label for="phone" class="block">Phone</label>
+        <input
+          id="phone"
+          type="tel"
+          x-model="phone"
+          class="w-full rounded border px-3 py-2"
+        />
+      </div>
+
+      <!-- Message -->
+      <div>
+        <label for="message" class="block">Message</label>
+        <textarea
+          id="message"
+          x-model="message"
+          rows="5"
+          required
+          class="w-full rounded border px-3 py-2"
+        ></textarea>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="rounded border px-4 py-2">
+        Send via WhatsApp
+      </button>
+    </form>
+  </div>
+</layout>

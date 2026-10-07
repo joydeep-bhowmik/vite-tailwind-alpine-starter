@@ -6,14 +6,48 @@ import tailwindcss from "@tailwindcss/vite";
 
 const root = import.meta.dirname;
 
-// Every .html file in the project root is a page: about.html -> { about: "/abs/about.html" }
+const pagesDir = resolve(root, "src/pages");
+
+// Every .html file in src/pages is a page: about.html -> { about: "/abs/src/pages/about.html" }
 function pages() {
   return Object.fromEntries(
     fs
-      .readdirSync(root)
+      .readdirSync(pagesDir)
       .filter((file) => file.endsWith(".html"))
-      .map((file) => [file.replace(/\.html$/, ""), resolve(root, file)]),
+      .map((file) => [file.replace(/\.html$/, ""), resolve(pagesDir, file)]),
   );
+}
+
+// Serves src/pages at the site root, so URLs stay /about.html instead of /src/pages/about.html.
+function pagesAtRoot() {
+  return {
+    name: "pages-at-root",
+    enforce: "post",
+    // Dev: rewrite /about.html -> /src/pages/about.html before Vite handles the request.
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        const [path, query = ""] = req.url.split("?");
+        const file = path === "/" ? "index.html" : path.slice(1);
+        if (file.endsWith(".html") && fs.existsSync(resolve(pagesDir, file))) {
+          req.url = `/src/pages/${file}${query && `?${query}`}`;
+        }
+        next();
+      });
+    },
+    // Build: write dist/src/pages/about.html as dist/about.html.
+    generateBundle(_, bundle) {
+      for (const [key, chunk] of Object.entries(bundle)) {
+        if (chunk.type === "asset" && key.startsWith("src/pages/")) {
+          delete bundle[key];
+          this.emitFile({
+            type: "asset",
+            fileName: key.slice("src/pages/".length),
+            source: chunk.source,
+          });
+        }
+      }
+    },
+  };
 }
 
 // Wraps page content in a layout: <layout src="src/layouts/main.html" title="Home">...</layout>
@@ -48,7 +82,7 @@ function htmlLayout() {
 }
 
 export default defineConfig({
-  plugins: [htmlLayout(), htmlInject({ replace: { undefined: "" } }), tailwindcss()],
+  plugins: [pagesAtRoot(), htmlLayout(), htmlInject({ replace: { undefined: "" } }), tailwindcss()],
   build: {
     rollupOptions: {
       input: pages(),
